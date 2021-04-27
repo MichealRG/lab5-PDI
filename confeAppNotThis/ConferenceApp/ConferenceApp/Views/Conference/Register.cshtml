@@ -1,0 +1,108 @@
+﻿@model ConferenceApp.Models.ConferenceUser
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, DNTCaptcha.Core
+
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+
+<h4>ConferenceUser</h4>
+<hr />
+<input type="hidden" id="foo" name="foo" />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Register" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="File" class="control-label"></label>
+                <input asp-for="File" class="form-control" />
+                <span asp-validation-for="File" class="text-danger"></span>
+            </div>
+            <div class="form-group dropzone">
+                <label class="control-label" asp-for="FileSec"></label>
+                <input asp-for="FileSec" type="file" multiple />
+                <span asp-validation-for="FileSec" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="ConferenceType" class="control-label"></label>
+                @*<input asp-for="ConferenceType" class="form-control" />*@
+                @*<select class="form-control">
+                        <option value="0">Workshop</option>
+                        <option value="1">Lecture</option>
+                        <option value="2">Remote</option>
+                    </select>*@
+                <select asp-for="ConferenceType" class="form-control" asp-items="@Html.GetEnumSelectList<ConferenceType>()">
+                    <option value="">Wybierz</option>
+                </select>
+                <span asp-validation-for="ConferenceType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <dnt-captcha asp-captcha-generator-max="999999"
+                             asp-captcha-generator-min="111111"
+                             asp-captcha-generator-language="English"
+                             asp-captcha-generator-display-mode="ShowDigits"
+                             asp-use-relative-urls="true"
+                             asp-placeholder="Wporwadź kod bezpieczeństwa"
+                             asp-validation-error-message="Proszę wprowadź kod bezpieczeństwa."
+                             asp-font-name="Tahoma"
+                             asp-font-size="20"
+                             asp-fore-color="#333333"
+                             asp-back-color="#ccc"
+                             asp-text-box-class="text-box form-control"
+                             asp-text-box-template="<span class='input-group-prepend'><span class='form-group-text'></span></span>{0}"
+                             asp-validation-message-class="text-danger"
+                             asp-refresh-button-class="fas fa-redo btn-sm"
+                             asp-use-noise="false" />
+            </div>
+            <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey=" 1fde6dbbd5614247a2e414f159b23f1b52162adb"></div>
+
+                </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfdEaAaAAAAAOmlQg7y5ZatVHEONzJdfx3pD2BI"></script>
+        <script>
+            function onClick(e) {
+                e.preventDefault();
+                grecaptcha.ready(function () {
+                    grecaptcha.execute("6LfdEaAaAAAAAOmlQg7y5ZatVHEONzJdfx3pD2BI", { action: 'submit' }).then(function (token) {
+                        // Add your logic to submit to your backend server here.
+                        console.log(token)
+                        document.getElementById("foo").value = token;
+                    });
+                });
+            }
+        </script>
+    <script src="/js/dropzone/dist/min/dropzone.min.js"></script>
+}
